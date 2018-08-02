@@ -1,64 +1,23 @@
-# Triggering a Teamcity buid from a push GitHub
+# Triggering a Teamcity build from a push GitHub
 
-This guide will demonstrate how to get Teamcity to build your project everytime your soure code is changed and pushed to GitHub
-## Prerequistes
-+ Java(JRE). Supported are:
-    + Oracle java 8 and updates
-    + OpenJDK 8.
-+ Download and install TeamCity in https://www.jetbrains.com/teamcity/download/
-+ TeamCity account
-+ GitHub repository
-## 1. Sign in to Teamcity 
-+ Starting TeamCity server by running the following in your terminal:
-    ```
-     cd TeamCity/bin
-     ./runAll.sh start
-    ```
-By default, TeamCity run on  http://localhost:8111
+This guide will demonstrate how to get Teamcity to build your project every time your soure code is changed and pushed to GitHub.
+## Table of contents
+[1. Set up TeamCity](#1-setup-teamcity)
 
-![alt text](./assets/run_server.png )
+[2. Configure TeamCity with GitHub](#2-configure-teamcity-with-github)
 
-+ Enter your TeamCity username and password then click `Log in`. 
+## 1. Setup TeamCity
++ TeamCity server is a web application that runs within a capable J2EE servlet container. So, you can installing the JDK software and setting JAVA_HOME from [here](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/).
 
-![alt text](./assets/login.png )
+ + Downloads TeamCity from [here](https://www.jetbrains.com/teamcity/download/). 
 
-## 2. Configuring TeamCity
-Click on `Administration` then click button `Create project`.
+ + Installing and Configuring the TeamCity server from [this guide](https://confluence.jetbrains.com/display/TCD18/Installing+and+Configuring+the+TeamCity+Server).
 
-![alt text](./assets/creat_project.png )
+ ## 2. Configure TeamCity with GitHub
++ Connect GitHub with TeamCity, you can follow [this guide](http://devexpress.github.io/testcafe/documentation/recipes/integrating-testcafe-with-ci-systems/teamcity.html).
+ 
+ + More information about TeamCity can be found [this tutorial](https://confluence.jetbrains.com/display/TCD10/TeamCity+Documentation).
+ + Now that you have a project, you can now start configuring tasks. In the [next guideline](2-run-automation-test.md), we will configure tasks that will allow us run an automation test wwith Kobiton.
 
-+ Enter 'Project Name' and 'Project ID' then click button `Create` 
 
-![alt text](./assets/info_project.png )
 
-+ Click button `Create build configuration` on the right column 
-
-![alt text](./assets/creat-build.png )
-
-+ Enter Build configuration Name then click button `create`
-
-![alt text](./assets/inf_creatbuild.png )
-+ Configuring the Branch Specification under the VCS root:
-    + Click `Show advanced options` to  see advanced options.
-    + In the `Type of VCS`, choose 'Git' and fill required information. 
->Note:  
-> + +refs/pull/*/merge:    When a pull request is made, GitHub automatically creates a reference that holds the pull request as well as one that is a merge with the master branch
-> + If you want to build the branch, without merging, you could use the following: +:refs/pull/*/head
-
-![alt text](./assets/VCS.png )
-
-+ Click button `test conection`, a dialog appears and announces 'success' or 'fail'. if success, Click button `Create connect` else you should check information
-
-![alt text](./assets/connect.png )
-
-+ You can see list in the left column , click on `triggers` then on the right column click button `add new trigger`. 
-
-![alt text](./assets/click_trigger.png )
-
-+ Choose 'VCS trigger' and save
-
-![alt text](./assets/trigger.png )
-
-+ Now, when you push git, you can see TeamCity auto build 
-
-![alt text](./assets/running.png )
