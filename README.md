@@ -7,7 +7,7 @@ If you are using:
 + Appium to write the automation test
 + Reactnative to write app
 
-The guidelines in this repo will show you how to trigger a TeamCity build from a push on GitHub, and how to run automation tests with Kobiton.
+Kobiton is a mobile cloud platform that enables users to perform manual or automated testing on iOS and Android devices. This guide will demonstrate how to configure Travis CI to get the latest build on Testflight and run Appium automation tests on Kobiton Test Cloud service.
 
 ## Contents
 

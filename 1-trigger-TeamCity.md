@@ -1,63 +1,55 @@
 # Triggering a Teamcity build from a push GitHub
 
-This guide will demonstrate how to get Teamcity to build your project every time your soure code is changed and pushed to GitHub.
+This guide will demonstrate how to get Teamcity to build your project every time your source code is changed and pushed to GitHub.
 ## Prerequisites
 + Java(JRE). Supported are:
     + Oracle java 8 and updates
     + OpenJDK 8
-+ Download and install TeamCity in https://www.jetbrains.com/teamcity/download/
++ Download and install TeamCity
 + TeamCity account
 + GitHub repository
-## 1. Sign in to Teamcity 
-+ Start TeamCity server by running the following in your terminal:
-    ```
-     cd TeamCity/bin
-     ./runAll.sh start
-    ```
-By default, TeamCity will run on  http://localhost:8111.
+## 1.1. Sign in to Teamcity 
++ You can download and install TeamCity from [here](https://confluence.jetbrains.com/display/TCD10/Installation+Quick+Start).  
 
-![alt text](./assets/run_server.png )
-
-+ Enter your TeamCity username and password then click `Log in`. 
++ Start TeamCity server, enter your TeamCity username and password, then click `Log in`.
 
 ![alt text](./assets/login.png )
-
-## 2. Configuring TeamCity
-+ Click on `Administration` then click button `Create project`.
+## 1.2 Connect TeamCity with GitHub
++ Now you need to create a project, to do this click on `Projects` and then `Create Project`. 
 
 ![alt text](./assets/creat_project.png )
 
-+ Enter 'Project Name' and 'Project ID' then click button `Create`.
++ You then get the options of which of source control repository you are linking to, I'm going to select "From GitHub".
 
-![alt text](./assets/info_project.png )
+![alt text](./assets/connect_git.png )
 
-+ Click button `Create build configuration` on the right column. 
++ The dialog will appear, click `Register TeamCity` to set up OAuth authentication with GitHub.  
 
-![alt text](./assets/creat-build.png )
+![alt text](./assets/add_connect.png )
 
-+ Enter Build configuration Name then click button `Create`.
++ You will be redirected to GitHub. Enter the 'application name', 'homepage URL' and 'authorization callback URL' and click `Register application`.
+>Note:
+    >+ Copy "Homepage URL" and "authorization callback URL" in the "Add Connection" dialog. 
 
-![alt text](./assets/inf_creatbuild.png )
-+ Configure the Branch Specification under the VCS root:
-    + Click `Show advanced options` to  see advanced options.
-    + In the `Type of VCS`, choose 'Git' and fill in the required information. 
->Note:  
-> + `+refs/pull/*/merge`:    When a pull request is made, GitHub automatically creates a reference that holds the pull request as well as one that is a merge with the master branch.
-> + If you want to build the branch, without merging, you could use the following: `+:refs/pull/*/head`.
+![alt text](./assets/OAuth.png )
 
-![alt text](./assets/VCS.png )
++ A page with "Client ID" and "Client Secret" will open. Copy and paste them to TeamCity and click `Save`. 
 
-+ Click button `Test conection`, a dialog appears and announces 'success' or 'fail'. If successful, click the button `Create`. Else, check your information.
+![alt text](./assets/get_client.png )
 
-![alt text](./assets/connect.png )
+![alt text](./assets/save_connect.png )
+## 1.3 Create a project
++ Click `Sign in to GitHub`. 
 
-+ On the left navigation bar, click on `Triggers`, then click on `Add new trigger`.
+![alt text](./assets/signin_git.png )
 
-![alt text](./assets/click_trigger.png )
++ The connection set up, you can choose a GitHub reposity from list.
 
-+ Choose 'VCS trigger' and click on `Save`
+![alt text](./assets/choose_repo.png )
 
-![alt text](./assets/trigger.png )
++ Click `Proceed` to creat project from GitHub reposity.
+
+![alt text](./assets/creat.png )
 
 + Now, when you push to GitHub, you can see the TeamCity auto build. 
 

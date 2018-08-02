@@ -1,6 +1,5 @@
 # Running Automation test with Kobiton
-## 1. Prepare Kobiton configuration for excuting automation testing
-### 1.1 Get Kobiton Username and API Key
+## 2.1. Get require Params
 + Go to  https://portal.kobiton.com
 
 **a. Get Kobiton Username**
@@ -21,22 +20,7 @@
 
 ![alt text](./assets/api_key.png )
 
-### 1.2 Configure in your TeamCity project
-+ In your project in TeamCity, on the left side on the page, click on 'Build Step' to set build steps.
-+ On the right side of the page,  for the 'Runner type' category, choose 'Command Line '.
-+ Add command lines to your script content. 
-
-Example:
-```
-  cd javascript
-  npm install
-  npm run android-web-test
-```
-
-![alt text](./assets/cmd.png )
-
-## 2. Write the automation test script
-### 2.1 Desired cap
+**c. Get Desired cap**
 + In the navigation bar at the top of the Kobiton website, select `Devices`.
 
 ![alt text](./assets/devices.png )
@@ -49,10 +33,12 @@ Example:
 
 ![alt text](./assets/automation.png )
 
-### 2.2 Write the script
+## 2.2. Write the automation test script
+**a. Write the script**
 + For samples of automation tests, go to https://github.com/kobiton/samples .
 + Choose a language for your test script, and decide whether you want to test on Android or IOS , and either do a web test or an app test. 
-+ Make sure in the code you specify your Kobiton username, API key and information under desiredCaps. 
++ Make sure in the code you specify your Kobiton username, API key and information under desiredCaps.
+
 Example:
 
 ```javascript
@@ -74,9 +60,24 @@ const apiKey = process.env.KOBITON_API_KEY
   udid:               {your_device_udid}
 }
 ```
+
+**b. Configure in your TeamCity project**
++ In your project in TeamCity, on the left side on the page, click on 'Build Step' to set build steps.
++ On the right side of the page,  for the 'Runner type' category, choose 'Command Line '.
++ Add command lines to your script content. 
+
+Example: I need run file 'amdroid-web-test', so i command lines. 
+```
+  cd javascript
+  npm install
+  npm run android-web-test
+```
+
+![alt text](./assets/cmd.png )
 + Now, try a build on Teamity and check Kobiton cloud devices to see if a test session was created.
-## 3. Call Kobiton REST API to get session information
-### 3.1 Get the automation session data through Kobiton REST API
+
+## 2.3. Call Kobiton REST API to get session information
+**a. Get the automation session data through Kobiton REST API**
 
 To make a request:
 
@@ -91,7 +92,7 @@ To make a request:
   -H 'Authorization: Basic dGVzdHVzZXI6MTIzZWQtMTIzZmFjLTkxMzdkY2E='
   -H 'Accept: application/json'
 ``` 
-**a. Get Application info** 
+**Get Application info** 
 ```
   GET /apps/{application_ID}
 ```
@@ -99,7 +100,7 @@ You can get your application ID in your desiredCaps. If you find your applicatio
 
 ![alt text](./assets/apps.png )
 
-**b. Get session info**
+**Get session info**
 ```
   GET /session/{sessionID}
 ```
@@ -111,15 +112,21 @@ Response elements:
 
 For more information, go to https://api.kobiton.com/docs/
 
-**c. Get session Commands**
+**Get session Commands**
 ```
   GET /session/{sessionId}/commands
 ```
-To get a certain page of your commands, add page parameter in your query For example: GET /session/{sessionId}/commands?page=2
-### 3.2 Final result
+To get a certain page of your commands, add page parameter in your query.
+
+For example: 
+
+GET /session/{sessionId}/commands?page=2
+
+**b. Final result**
+
 The test is either a success or failure.
 
-### Failure Case
+**Failure Case**
 
 + Error: "The environment you requested was unavailable."
   
@@ -128,7 +135,7 @@ The test is either a success or failure.
 + Other
 
   + Contact Kobiton for support
-  + Go to portal.kobiton.com
+  + Go to https://portal.kobiton.com/
   + In the navigation bar at the top of the page, click on 'Support'
 
   ![alt text](./assets/support.png )
