@@ -117,10 +117,12 @@ For more information, go to https://api.kobiton.com/docs/
   GET /session/{sessionId}/commands
 ```
 To get a certain page of your commands, add page parameter in your query For example: GET /session/{sessionId}/commands?page=2
+
 **b. Final result**
+
 The test is either a success or failure.
 
-### Failure Case
+**Failure Case**
 
 + Error: "The environment you requested was unavailable."
   
