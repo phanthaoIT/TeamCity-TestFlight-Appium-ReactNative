@@ -116,7 +116,9 @@ For more information, go to https://api.kobiton.com/docs/
 ```
   GET /session/{sessionId}/commands
 ```
-To get a certain page of your commands, add page parameter in your query For example: GET /session/{sessionId}/commands?page=2
+To get a certain page of your commands, add page parameter in your query.
+
+For example: GET /session/{sessionId}/commands?page=2
 
 **b. Final result**
 
@@ -131,7 +133,7 @@ The test is either a success or failure.
 + Other
 
   + Contact Kobiton for support
-  + Go to portal.kobiton.com
+  + Go to https://portal.kobiton.com/
   + In the navigation bar at the top of the page, click on 'Support'
 
   ![alt text](./assets/support.png )
