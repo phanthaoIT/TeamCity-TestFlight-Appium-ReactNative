@@ -11,5 +11,4 @@ Kobiton is a mobile cloud platform that enables users to perform manual or autom
 
 ## Table of contents
 
-1. This guide will demonstrate [how to trigger a TeamCity build from a push to GitHub](1-trigger-TeamCity.md)
-2. This guide will demonstrate [how to run automation tests on your app with the Kobiton service](2-run-automation-test.md)
+1. This guide will demonstrate [how to run automation tests on your app with the Kobiton service](1-run-automation-test.md)
