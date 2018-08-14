@@ -26,27 +26,7 @@ Set up your project and link your app repository that we will test with Kobiton 
 + More information about TeamCity can be found in [this tutorial](https://confluence.jetbrains.com/display/TCD10/TeamCity+Documentation).
 
 ## 2. Prepare Kobiton configuration for executing automation testing 
-If you do not have a Kobiton account yet, go ahead to [create a free trial account](https://kobiton.com/freetrial/) and sign in. It takes just a few moments.
-
- **a. Get Kobiton Username**
-  + Go to  https://portal.kobiton.com
-  + In the upper right hand corner, click on User icon and in the drop down menu, select 'Profile'.
-
- ![alt text](./assets/click_profile.png )
- 
- + You should see your username.
- 
- ![alt text](./assets/username.png )
-
- **b. Get Kobiton API key**
-+ Click on user icon in the upper right hand corner again and select 'Setting'.
-
- ![alt text](./assets/click_setting.png )
-
- + You will see your API key under the 'API Keys'. 
-
- ![alt text](./assets/api_key.png )
-
+You can visit [here](https://kobiton.com/blog/automation-web-appium-kobiton-nodejs/) and navigate to `Configure test scripts for Kobiton` to get Kobiton username, Kobiton API.
 ## 3. Write the automation test script
 **a. Desired capabilities**
 
