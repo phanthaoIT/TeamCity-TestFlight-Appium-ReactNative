@@ -3,13 +3,11 @@ This guide will demonstrate how to run an automation test with Kobiton on Teamci
 ## Table of contents
 [1. Setup TeamCity](#1-setup-teamcity)
 
-[2. Prepare Kobiton configuration for executing automation testing](#2-prepare-kobiton-configuration-for-executing-automation-testing)
+[2. Write the automation test script](#2-write-the-automation-test-script)
 
-[3. Write the automation test script](#3-write-the-automation-test-script)
+[3. Configure your TeamCity project for Kobiton testing](#3-configure-your-teamcity-project-for-kobiton-testing)
 
-[4. Configure your TeamCity project for Kobiton testing](#4-configure-your-teamcity-project-for-kobiton-testing)
-
-[5. Call Kobiton REST API to get session information](#5-call-kobiton-rest-api-to-get-session-information)
+[4. Call Kobiton REST API to get session information](#4-call-kobiton-rest-api-to-get-session-information)
 ## Prerequisites 
 - Java(JRE). Supported are:
   + Oracle java 8 or higher
@@ -17,35 +15,45 @@ This guide will demonstrate how to run an automation test with Kobiton on Teamci
 - Kobiton account
 ## 1. Setup TeamCity
 This part will guide you how to setup TeamCity and configure TeamCity with GitHub. Skip step if you already have TeamCity setup.
- + You can download TeamCity from [here](https://www.jetbrains.com/teamcity/download/).  
  + For the introduction on how to install and configure the TeamCity server, follow [this guide](https://confluence.jetbrains.com/display/TCD18/Installing+and+Configuring+the+TeamCity+Server).
 
 Set up your project and link your app repository that we will test with Kobiton later.
 + Connect GitHub with TeamCity, you can follow [this guide](https://confluence.jetbrains.com/display/TCD10/Integrating+TeamCity+with+VCS+Hosting+Services).
  
-+ More information about TeamCity can be found in [this tutorial](https://confluence.jetbrains.com/display/TCD10/TeamCity+Documentation).
+  > For more information about TeamCity can be found in [this tutorial](https://confluence.jetbrains.com/display/TCD10/TeamCity+Documentation).
 
-## 2. Prepare Kobiton configuration for executing automation testing 
-You can visit [here](https://kobiton.com/blog/automation-web-appium-kobiton-nodejs/) and navigate to `Configure test scripts for Kobiton` to get Kobiton username, Kobiton API.
-## 3. Write the automation test script
-**a. Desired capabilities**
+## 2. Write the automation test script
+> Kobiton already provide samples for automation test script on multiple languages. Visit [here](https://github.com/kobiton/samples) for references.
+**This guideline will use a Node JS script as an example.**
+### 2.1 Prepare automation tese script
+ > You can visit [our blog](https://kobiton.com/blog/automation-web-appium-kobiton-nodejs/) for more detail in setting up an automation test script. 
++ **Username and API key**
+  
+  Go to https://portal.kobiton.com to get your 'Username' and 'API key'
 
- Kobiton provides the so-called Automation Settings for each device on which you want to run tests. Actually Automation Settings are the desired capabilities that need to be added to the Appium test script in order for tests to be executed on the Kobiton devices.
-+ In the navigation bar at the top of the Kobiton website, select `Devices`.
++ **Desired capabilities**
+
+  Kobiton provides the so-called Automation Settings for each device on which you want to run tests. Actually Automation Settings are the desired capabilities that need to be added to the Appium test script in order for tests to be executed on the Kobiton devices.
+
+  + In the navigation bar at the top of the Kobiton website, select `Devices`.
  
- ![alt text](./assets/devices.png )
+    ![alt text](./assets/devices.png )
  
- + Hover over any device and click on the Automation settings button. A dialog box will then appear on screen.
+  + Hover over any device that you want to test with and click on the Automation settings button. A dialog box will then appear on screen.
  
- ![alt text](./assets/click_auto.png )
+    ![alt text](./assets/click_auto.png )
  
- + On the left hand side, you can select your preferred language, App Type...
+  + On the left hand side, you can select your preferred language, App Type, etc.
  
- ![alt text](./assets/automation.png ) 
- **b. Run automation test**
-+ Kobiton already provide some example for basic automation test. For samples of automation tests, go to https://github.com/kobiton/samples .
-+ Choose a language for your test script, and decide whether you want to test on Android or IOS , and either do a web test or an app test. 
-+ Make sure in the code you specify your Kobiton username, API key and replace the `desiredCaps`.
+    ![alt text](./assets/automation.png ) 
+### 2.2 Write automation test script
++ Kobiton already provide some example for basic automation test. 
+  + Go to https://github.com/kobiton/samples
+  + Clone the repository to your local machine.
+  + Choose the testing language. In this guideline, we will use the NodeJS.
+  + Open testing script file. You can choose either web test or app test on Android or iOS. We will use android-app-test.js file as an example to test Android app with Kobiton.
+
++ Replace the Kobiton `Username`, `API key` and `desiredCaps` that collected from above part to the script. You can attach an enviroment variable to TeamCity in the [next step](#3-configure-your-teamcity-project-for-kobiton-testing).
 
 Example:
 
@@ -69,7 +77,7 @@ const apiKey = process.env.KOBITON_API_KEY
 }
 ```
 
-## 4. Configure your TeamCity project for Kobiton testing
+## 3. Configure your TeamCity project for Kobiton testing
 You can attach an enviroment variable to TeamCity(Optional).
 + In your project in TeamCity, on the left side of the page, click on 'Parameters'. Then click the `Add new parameter` button. 
 
@@ -82,11 +90,10 @@ You can attach an enviroment variable to TeamCity(Optional).
 ![alt text](./assets/param_key.png )
 
 Now, we will add a build step to run automation test.
-+ In your project in TeamCity, on the left side on the page, click on 'Build Step' to set build steps.
++ In your Teamcity project, on the left side on the page, click on 'Build Step' to set build steps.
 + On the right side of the page,  for the 'Runner type' category, choose 'Command Line '.
-+ Add command lines to your script content.
++ Add below command to `Custom script` part.
 
-Example: 
 ```
   cd javascript
   npm install
@@ -97,10 +104,15 @@ Example:
 > + `npm run android-web-test` is the command to run the test script
 
 ![alt text](./assets/cmd.png )
-+ Now, try to build on Teamity and check Kobiton cloud devices to see if a test session was created.
++ Push your changes to GitHub. TeamCity  will install the neccessary dependencies and then run the test on Kobiton. 
 
-## 5. Call Kobiton REST API to get session information
+![alt text](./assets/build_complete.png )
 
-Kobiton already provides a Node.js sample on how to get session information, get session commands using Kobiton REST API. Go to https://github.com/kobiton/samples, select the folder named 'REST API' and follow the instruction.
++ Now, go to https://portal.kobiton.com/ and select `Session` to see if a test session was created.
+## 4. Call Kobiton REST API to get session information
 
-> For more details on how to retrieve information about your session, go to https://api.kobiton.com/docs/
+Kobiton already provides a Node.js sample on how to get session information, get session commands using Kobiton REST API. 
++ Go to https://github.com/kobiton/samples
++ Go to the 'REST API' folder and follow the instruction in `README.md` file.
+-------
+You can now run automation tests with Kobiton from TeamCity!
