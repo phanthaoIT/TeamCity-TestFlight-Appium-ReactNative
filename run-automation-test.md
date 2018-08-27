@@ -1,7 +1,15 @@
 # Running Automation test with Kobiton
+
+TeamCity is a popular continuous integration server that supports a variety of different version control systems and build runners. Octopus Deploy and TeamCity can work together to make automated, continuous delivery easy.
+
+Kobiton allows managing real mobile devices, users can easily setup and perform automation test. 
+
+This document will guide how to automation test an app use TeamCity to automatically execute the test on Kobiton devices.
+
+
 ## Table of contents
 + [Prerequisites](#prerequisites)
-+ [1. Configure TeamCity and integrate with GitHub](#1-config-teamcity-and-integrate-with-github)
++ [1. Configure TeamCity and integrate with GitHub](#1-configure-teamcity-and-integrate-with-github)
 + [2. Configure automation test script](#2-config-automation-test-script)
 + [3. Run automation test on Kobiton devices](#3-run-automation-test-on-kobiton-devices)
 + [4. Fetch test session data through Kobiton REST API](#4-fetch-test-session-data-through-kobiton-rest-api)
@@ -12,7 +20,7 @@
   + OpenJDK 8
 - Kobiton account
     >Please visit https://portal.kobiton.com/register to create new account.
-## 1. Config TeamCity and integrate with GitHub
+## 1. Configure TeamCity and integrate with GitHub
 Firstly, let's assume you already have an empty GitHub repository for running automation test.
 
 This part will guide you to how to configure TeamCity to integrate with your automation test GitHub repository. Skip this step if you have already had TeamCity setup.
@@ -122,7 +130,7 @@ var kobitonServerConfig = {
 }
 ```
 ## 3. Run automation test on Kobiton devices
-+ Push your changes to GitHub. TeamCity will install necessary dependencies and then run the test on Kobiton. 
++ Push your changes to GitHub. TeamCity will install necessary dependencies and then run the test on Kobiton. Click the last build, choose **Build Log**, you can see a build log is an enhanced console output of a build.
 
 ![log teamcity](./assets/build_complete.png )
 
