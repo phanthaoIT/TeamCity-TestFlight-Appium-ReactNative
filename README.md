@@ -3,10 +3,14 @@ Guidance on integrating Kobiton service into the mobile app build pipeline: Team
 
 If you are using:
 + TeamCity to build app
-+ HockeyApp for keeping the daily app build
++ HockeyApp to keep all application builds
 + Appium to write the automation test
-+ Reactnative to write app
++ React Native to develop the application in
 
-Kobiton is a mobile cloud platform that enables users to perform manual or automated testing on iOS and Android devices. This guide will demonstrate how to configure TeamCity to get the latest build on HockeyApp and run Appium automation tests on Kobiton Test Cloud service.
+Kobiton is a mobile cloud platform that enables users to perform manual or automated testing on iOS and Android devices. 
+
+Teamcity is a Java-based build management and continuous integration server. TeamCity allows to administer build infrastructures of literally any size from a central Web interface. 
+
+By using TeamCity, we can automatically deploy app and run app automation test on Kobiton. 
 
 This guide will demonstrate [how to run automation tests on your app with the Kobiton service](run-automation-test.md)
