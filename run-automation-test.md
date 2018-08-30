@@ -2,23 +2,22 @@
 ## Table of contents
 + [Prerequisites](#prerequisites)
 + [1. Configure TeamCity and integrate with GitHub](#1-configure-teamcity-and-integrate-with-github)
-+ [2. Configure HockeyApp](#2-configure-hockeyapp)
++ [2. Getting required parameters](#2-getting-required-parameters)
 + [3. Configure automation test script](#3-configure-automation-test-script)
 + [4. Run automation test on Kobiton devices](#4-run-automation-test-on-kobiton-devices)
 + [5. Fetch test session data through Kobiton REST API](#5-fetch-test-session-data-through-kobiton-rest-api)
 + [6. Feedback](#6-feedback)
 ## Prerequisites 
-- Java(JRE). Supported are:
-  + Oracle java 8 or higher
-  + OpenJDK 8
+- Java(JRE) for running TeamCity server. Supported versions:
+  + Oracle Java 8 and updates. 32 or 64 bit (64 bit is recommended for production)
+  + OpenJDK 8. 32 or 64 bit
+
+  > Go to [this link](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) to download Java.
 - Kobiton account
   >Please visit https://portal.kobiton.com/register to create new account.
-- HockeyApp account
-  > Please visit https://hockeyapp.net/ to create new account.
-- Node: 6.0.0. or higher
+- Node
+  >You can go to https://nodejs.org/en/download/ to download the latest version of node
 ## 1. Configure TeamCity and integrate with GitHub
-Firstly, let's assume you already have an empty GitHub repository for running automation test.
-
 This part will guide you to how to configure TeamCity to integrate with your automation test GitHub repository. Skip this step if you have already had TeamCity setup.
  + For instruction on how to install and configure TeamCity server, follow [this guide](https://confluence.jetbrains.com/display/TCD18/Installing+and+Configuring+the+TeamCity+Server).
 
@@ -26,97 +25,82 @@ Set up your project and link your app repository that we will test with Kobiton 
 + You need to configure a connection to your GitHub repository. Instruction on how to connect GitHub with TeamCity can be found [this guide](https://confluence.jetbrains.com/display/TCD10/Integrating+TeamCity+with+VCS+Hosting+Services), in `Connecting to GitHub` section. After the connection is configured, TeamCity will be granted with `full control` of private repositories and `Write repository hooks` permission.
  
 >More information about TeamCity can be found in [this documentation](https://confluence.jetbrains.com/display/TCD10/TeamCity+Documentation).
-## 2. Configure HockeyApp 
-HockeyApp is a service that allows developers to recruit and manage testers, distribute apps, and collect crash reports, among other things.
-
-We need to get the download URL of your app so that Kobiton can install and run it.
+## 2. Getting required parameters
 ### 2.1 Get HockeyApp API Tokens and App ID
+We need to get the download URL of your app so that Kobiton can install and run it.
+
 To get app URL, these two must-have parameters are required : HockeyApp APP ID and API Tokens.
 
-Go to https://rink.hockeyapp.net/manage/dashboard to get App ID and API Tokens to prepare for the next step.
+Go to https://rink.hockeyapp.net/manage/dashboard with your HockeyApp account to get App ID and API Tokens to prepare for the next step.
 - **Get App ID**
 
   Click your app, you can see App ID 
 
-  ![App ID](./assets/img/2-appid.png)
+  ![App ID](./assets/2-appid.png)
 - **Get API Tokens**
 
   In the top right corner, click **user icon** -> **My Devices** -> **API Tokens**.
 
   Create a Hockey App API token for your app with `Full Access` or `Upload and Release` right.
 
-  ![Create App](./assets/img/2-token.png)
-### 2.2. Fetching the app download URL
+  ![Create App](./assets/2-token.png)
 
-To get the app download URL, we have provided a script written in NodeJS. After executing that script, you will get download URL of that app, which will be used in the next step.
-
-Downloads the scipt from [this link]('./getAppUrl.js') and copy to your automation test folder.
-
-## 3. Configure automation test script
-### 3.1 Get Username and API key
+### 2.2 Get Kobiton Username and APi key
 Go to https://portal.kobiton.com and login to your Kobiton account.
-- Username
+- **Username**
   + Click *user icon* -> **"Profile"** (you might find it in the top right corner)
 
   ![get username](./assets/username.png )
 
-- API key 
+- **API key** 
   + Click *user icon* -> **"Settings"**
 
   ![get api key](./assets/api_key.png )
-
-### 3.2 Get desired capabilities
+### 2.3 Get desired capabilities
 The desired capabilities need to be added to the automation test script to allow the test to be executed on Kobiton device.
-  + Click **Devices** in the top navigation bar.
+  + Go to https://portal.kobiton.com, click **Devices** in the top navigation bar.
  
     ![click devices](./assets/devices.png )
  
   + Hover over any device you want to test with and click on the Automation settings button (the gear symbol).
  
     ![click auto](./assets/click_auto.png )
- 
-  + Kobiton automatically translates your desired capabilities into code based on the options you selected. Simply copy and paste this code into your test script under the Input Capabilities section. This will replace the current configuration with the Kobiton device configuration and change the parameters in your test script. 
   
   + On the left-hand side, you can select your preferred language, App Type, etc.
-  In this example, we use **NodeJS** as the default language of the script. Therefore, choose **NodeJS** in `Language` section and **Hybrid/Native from Apps** in `App type` section.
+  In this example, we use **NodeJS** as the default language of the script. Therefore, choose **NodeJS** in `Language` section and **Hybrid/Native from Apps** in `App type` section. On the right-hand side, Kobiton automatically translates your desired capabilities into code based on the options you selected. Copy the code to prepare for the next step.
 
   ![auto](./assets/automation.png ) 
+## 3. Configure automation test script
+### 3.1. Fetching the app download URL
+To get the app download URL, we have provided a script written in NodeJS. After executing that script, you will get the latest app version, which will be used in the next step.
 
-### 3.3 Configure automation test script
+Downloads the scipt from [this link](./getAppUrl.js) and copy to your automation test folder.
+### 3.2 Configure automation test script
 Kobiton has already provided sample scripts for automation testing, visit [here](https://github.com/kobiton/samples) for reference. 
-> Note: In this guideline, we will use the Node.js sample (samples/javascript folder) as an example.
+> Note: In this guideline, we will use the Node.js sample (samples/javascript folder) as an example. In sample/javascript folder, we will use `android-app-test` script. You can choose `android-app-test.js` if you want to run tests on Android or `ios-app-test.js` if on iOS.
 
 Use Kobiton’s desired capabilities settings to configure your test scripts. Our settings include all the required configurations you need to automate your test using the Appium Framework and to run your automation test on real devices in the Kobiton cloud.
 
 Open automation test script file in your repository or create a new one.
 
-Add an environment variable named `APP_URL`, replace `desiredCaps` in the script with the ones collected in the previous step. Then, replace `app` value of `desiredCaps` with the `app_url` variable.
+Replace `desiredCaps` in the script with the ones collected in the previous step. Then,replace value of `app` element in `desiredCaps` with the `APP_URL` environment variable (The value of `app` element is the download URL of your app. If your automation test script is in other languages, please use the proper method to access this environment variable).
 
-Example:
+Example in Node.js:
 
 ```javascript
-const username = process.env.KOBITON_USERNAME 
-const apiKey = process.env.KOBITON_API_KEY 
-const app_url = process.env.APP_URL 
-
-const kobitonServerConfig = {
-  protocol: 'https',
-  host: 'api-test.kobiton.com',
-  auth: `${username}:${apiKey}`
-}
 var desiredCaps = {
   sessionName:        'Automation test session',
   sessionDescription: '', 
   deviceOrientation:  'portrait',  
   captureScreenshots: true, 
-  app:                app_url, 
+  app:                process.env.APP_URL, 
   deviceGroup:        'KOBITON', 
   deviceName:         '<DEVICE_NAME>',
   platformVersion:    '<DEVICE_VERSION>',
   platformName:       '<DEVICE_PLATFORM_NAME>' 
 }
 ```
-### 3.4 Configure TeamCity project
+### 3.3 Configure TeamCity project
 **Attaching environment variable to Teamcity**
 + In your project in TeamCity, on the left side of the page, click **Parameters**. Then click **Add new parameter** button. 
 
@@ -126,25 +110,21 @@ var desiredCaps = {
 
 ![env.username](./assets/param_name.png)
 
->Note: Here are the variables we need. For the sake of this guideline, please set the name for these variables like below.
-> 
->APP_URL: You need put empty value of this variable 
-> 
->FILE_FORMAT: Your app file extension. `apk` for Android, `ipa` for iOS.
->
->APP_ID: Your app ID
->
->HOCKEYAPP_TOKEN: Hockey App API token
->
->KOBITON_API_KEY: Your Kobiton API Key
->
->KOBITON_USERNAME: Your Kobiton username
+Here are the variables we need. For the sake of this guideline, please set the name for these variables like below.
 
-![environment variables](./assets/img/2-env.png)
+FILE_FORMAT: Your app file extension. `apk` for Android, `ipa` for iOS.
 
-**Follow steps below to setup TeamCity for automation testing.**
+APP_ID: Your app ID
 
->Note: In this example, we will be running Android App Testing. Therefore, we will use `android-app-test` script.
+HOCKEYAPP_TOKEN: Hockey App API token
+
+KOBITON_API_KEY: Your Kobiton API Key
+
+KOBITON_USERNAME: Your Kobiton username
+
+![environment variables](./assets/2-env.png)
+
+**Setup TeamCity automation testing**
 
 1. In your TeamCity project, on the left side of the page, click **Build Steps** -> **Add build step** to set build steps.
 
@@ -154,13 +134,17 @@ var desiredCaps = {
 3. Add below commands in **Custom script** section.
 
 ```
-  APP_URL=$(node hockeyAppApi)
+  url=$(node getAppUrl)
   npm install
-  npm run android-app-test
+  APP_URL=$url npm run <YOUR_AUTOMATION_SCRIPT_EXECUTION_COMMAND>
 ```
+>Note: url=$(node getAppUrl): this command is required to get the app download URL and set value of url.
+
+Because we use `android-app-test` as our automation test script. Therefore, the execution command should be like:
+
 ![command](./assets/cmd.png)
 
->Note: APP_URL=$(node hockeyAppApi): this command is required to set value of `APP_URL`.
+
 ## 4. Run automation test on Kobiton devices
 + Push your changes to GitHub. TeamCity will automatically install necessary dependencies and then run the test on Kobiton. Click the last build, choose **Build Log**, you can see a build log is an enhanced console output of a build.
 
