@@ -11,12 +11,14 @@
 - Java(JRE) for running TeamCity server. Supported versions:
   + Oracle Java 8 and updates. 32 or 64 bit (64 bit is recommended for production)
   + OpenJDK 8. 32 or 64 bit
-
   > Go to [this link](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) to download Java.
 - Kobiton account
   >Please visit https://portal.kobiton.com/register to create new account.
+- HockeyApp account
+  >Go to https://rink.hockeyapp.net/users/sign_up to create a new account.
 - Node
-  >You can go to https://nodejs.org/en/download/ to download the latest version of node
+  >You can go to https://nodejs.org/en/download/ to download the latest version of node.
+- The project for developing mobile app.
 ## 1. Configure TeamCity and integrate with GitHub
 This part will guide you to how to configure TeamCity to integrate with your automation test GitHub repository. Skip this step if you have already had TeamCity setup.
  + For instruction on how to install and configure TeamCity server, follow [this guide](https://confluence.jetbrains.com/display/TCD18/Installing+and+Configuring+the+TeamCity+Server).
@@ -26,11 +28,12 @@ Set up your project and link your app repository that we will test with Kobiton 
  
 >More information about TeamCity can be found in [this documentation](https://confluence.jetbrains.com/display/TCD10/TeamCity+Documentation).
 ## 2. Getting required parameters
-### 2.1 Get HockeyApp API Tokens and App ID
 We need to get the download URL of your app so that Kobiton can install and run it.
 
 To get app URL, these two must-have parameters are required : HockeyApp APP ID and API Tokens.
 
+To run automation test on Kobiton devices, these three must-have parameters are required: your Kobiton username, Kobiton API key and the desired capabilities. 
+### 2.1 Get HockeyApp API Tokens and App ID
 Go to https://rink.hockeyapp.net/manage/dashboard with your HockeyApp account to get App ID and API Tokens to prepare for the next step.
 - **Get App ID**
 
@@ -67,7 +70,7 @@ The desired capabilities need to be added to the automation test script to allow
     ![click auto](./assets/click_auto.png )
   
   + On the left-hand side, you can select your preferred language, App Type, etc.
-  In this example, we use **NodeJS** as the default language of the script. Therefore, choose **NodeJS** in `Language` section and **Hybrid/Native from Apps** in `App type` section. On the right-hand side, Kobiton automatically translates your desired capabilities into code based on the options you selected. Copy the code to prepare for the next step.
+  In this example, we use **NodeJS** as the default language of the script. Therefore, choose **NodeJS** in `Language` section and **Hybrid/Native from Apps** in `App type` section. On the right-hand side, Kobiton automatically generates your desired capabilities into code based on the options you selected. Copy the code to prepare for the next step.
 
   ![auto](./assets/automation.png ) 
 ## 3. Configure automation test script
@@ -77,13 +80,11 @@ To get the app download URL, we have provided a script written in NodeJS. After 
 Downloads the scipt from [this link](./getAppUrl.js) and copy to your automation test folder.
 ### 3.2 Configure automation test script
 Kobiton has already provided sample scripts for automation testing, visit [here](https://github.com/kobiton/samples) for reference. 
-> Note: In this guideline, we will use the Node.js sample (samples/javascript folder) as an example. In sample/javascript folder, we will use `android-app-test` script. You can choose `android-app-test.js` if you want to run tests on Android or `ios-app-test.js` if on iOS.
-
-Use Kobiton’s desired capabilities settings to configure your test scripts. Our settings include all the required configurations you need to automate your test using the Appium Framework and to run your automation test on real devices in the Kobiton cloud.
+> Note: In this guideline, we will use the NodeJS sample (samples/javascript folder) as an example.
 
 Open automation test script file in your repository or create a new one.
 
-Replace `desiredCaps` in the script with the ones collected in the previous step. Then,replace value of `app` element in `desiredCaps` with the `APP_URL` environment variable (The value of `app` element is the download URL of your app. If your automation test script is in other languages, please use the proper method to access this environment variable).
+Replace `desiredCaps` in the script with the ones collected in the previous step. Then,replace value of `app` element in `desiredCaps` with the `APP_URL` environment variable, which is the download URL of your app. If your automation test script is in other languages, please use the proper method to access this environment variable.
 
 Example in Node.js:
 
@@ -125,6 +126,7 @@ KOBITON_USERNAME: Your Kobiton username
 ![environment variables](./assets/2-env.png)
 
 **Setup TeamCity automation testing**
+After the deployment process, we will test it with Kobiton. When the deploying stage is sucessary completed, TeamCity will execute testing stage. You can config for the deploying stage with steps same bellow.
 
 1. In your TeamCity project, on the left side of the page, click **Build Steps** -> **Add build step** to set build steps.
 
@@ -135,15 +137,15 @@ KOBITON_USERNAME: Your Kobiton username
 
 ```
   url=$(node getAppUrl)
-  npm install
-  APP_URL=$url npm run <YOUR_AUTOMATION_SCRIPT_EXECUTION_COMMAND>
+  APP_URL=$url <YOUR_AUTOMATION_SCRIPT_EXECUTION_COMMAND>
 ```
->Note: url=$(node getAppUrl): this command is required to get the app download URL and set value of url.
+>Note: url=$(node getAppUrl): this command is required to get the app download URL and set value of url. **getAppUrl** is the path to node application.
+>
+> APP_URL=$url: this is required to set value of APP_URL environment variable.
 
-Because we use `android-app-test` as our automation test script. Therefore, the execution command should be like:
+Because we use `android-app-test` written in NodeJS as our automation test script. Therefore, the execution command should be like:
 
 ![command](./assets/cmd.png)
-
 
 ## 4. Run automation test on Kobiton devices
 + Push your changes to GitHub. TeamCity will automatically install necessary dependencies and then run the test on Kobiton. Click the last build, choose **Build Log**, you can see a build log is an enhanced console output of a build.

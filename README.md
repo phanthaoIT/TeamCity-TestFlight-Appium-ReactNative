@@ -15,4 +15,4 @@ HockeyApp is a service that allows developers to recruit and manage testers, dis
 
 By using TeamCity, we can automatically deploy app and run app automation test on Kobiton. 
 
-This guide will demonstrate [how to run automation tests on your app with the Kobiton service](run-automation-test.md)
+[This guide](integrate-kobiton-teamcity.md) will demonstrate how to automatically execute automation test on Kobiton devices everytimes a new version of the app is deployed to HockeyApp using TeamCity.

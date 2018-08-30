@@ -12,7 +12,6 @@ function getDownloadUrl () {
 				'X-HockeyAppToken': `${hockeyAppToken}`
 			}
 		}
-
 		https.get(options, function (res) {
 			let body = ''
 			res.on('data', function (data) {
