@@ -11,15 +11,15 @@
 - Java(JRE) for running TeamCity server. Supported versions:
   + Oracle Java 8 and updates. 32 or 64 bit (64 bit is recommended for production)
   + OpenJDK 8. 32 or 64 bit
-  > Go to [this link](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) to download Java.
-- Kobiton account
-  >Please visit https://portal.kobiton.com/register to create new account.
-- HockeyApp account
-  >Go to https://rink.hockeyapp.net/users/sign_up to create a new account.
-- Node
-  >You can go to https://nodejs.org/en/download/ to download the latest version of node.
+  
+  Go to [this link](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) to download Java.
+- Kobiton account: Go to https://portal.kobiton.com/register to create new account. They're necessary for automation test with Kobiton.
+- Install Nodejs for run script get app download URL: Follow [this installation documents](https://nodejs.org/en/download/).
+- HockeyApp account: Go to https://rink.hockeyapp.net/users/sign_up to create a new account.
 - The project for developing mobile app.
 ## 1. Configure TeamCity and integrate with GitHub
+Firstly, let's assume you already have an empty GiHub repository for running automation test.
+
 This part will guide you to how to configure TeamCity to integrate with your automation test GitHub repository. Skip this step if you have already had TeamCity setup.
  + For instruction on how to install and configure TeamCity server, follow [this guide](https://confluence.jetbrains.com/display/TCD18/Installing+and+Configuring+the+TeamCity+Server).
 
@@ -77,16 +77,16 @@ The desired capabilities need to be added to the automation test script to allow
 ### 3.1. Fetching the app download URL
 To get the app download URL, we have provided a script written in NodeJS. After executing that script, you will get the latest app version, which will be used in the next step.
 
-Downloads the scipt from [this link](./getAppUrl.js) and copy to your automation test folder.
+Downloads [this scipt](./getAppUrl.js) and copy to your automation test folder.
 ### 3.2 Configure automation test script
 Kobiton has already provided sample scripts for automation testing, visit [here](https://github.com/kobiton/samples) for reference. 
 > Note: In this guideline, we will use the NodeJS sample (samples/javascript folder) as an example.
 
 Open automation test script file in your repository or create a new one.
 
-Replace `desiredCaps` in the script with the ones collected in the previous step. Then,replace value of `app` element in `desiredCaps` with the `APP_URL` environment variable, which is the download URL of your app. If your automation test script is in other languages, please use the proper method to access this environment variable.
+Replace `desiredCaps` in the script with the ones collected in the previous step. Then,replace value of `app` element in `desiredCaps` with the `APP_URL` environment variable, which is the download URL of your app. You can do the same on your own language.
 
-Example in Node.js:
+Example:
 
 ```javascript
 var desiredCaps = {
@@ -126,20 +126,23 @@ KOBITON_USERNAME: Your Kobiton username
 ![environment variables](./assets/2-env.png)
 
 **Setup TeamCity automation testing**
-After the deployment process, we will test it with Kobiton. When the deploying stage is sucessary completed, TeamCity will execute testing stage. You can config for the deploying stage with steps same bellow.
+
+After the deployment process, we will test it with Kobiton. When the deploying stage is sucessary completed, TeamCity will execute testing stage. 
+
+![stage](./assets/stage.png)
 
 1. In your TeamCity project, on the left side of the page, click **Build Steps** -> **Add build step** to set build steps.
 
-![build step](./assets/build_step.png)
+![build step](./assets/build_steps.png)
 
 2. On the right side of the page, for the **Runner type** category, choose **Command Line**.
 3. Add below commands in **Custom script** section.
 
 ```
-  url=$(node getAppUrl)
+  url=$(node <THE_PATH_TO_NODE_APP>)
   APP_URL=$url <YOUR_AUTOMATION_SCRIPT_EXECUTION_COMMAND>
 ```
->Note: url=$(node getAppUrl): this command is required to get the app download URL and set value of url. **getAppUrl** is the path to node application.
+>Note: url=$(node <THE_PATH_NODE_APP>): this command is required to get the app download URL and set value of url. **getAppUrl** is the path to node application.
 >
 > APP_URL=$url: this is required to set value of APP_URL environment variable.
 

@@ -5,7 +5,7 @@ If you are using:
 + TeamCity to build app
 + HockeyApp to store and distribute application builds
 + Appium to write the automation test
-+ React Native to develop the application in
++ ReactNative to develop the application in
 
 Kobiton is a mobile cloud platform that enables users to perform manual or automated testing on iOS and Android devices. 
 
