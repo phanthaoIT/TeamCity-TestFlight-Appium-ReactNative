@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "This a sample test",
   "scripts": {
-    "android-app-test": "mocha --require babel-core/register --no-timeouts android-app-test.js",
-    "ios-app-test": "mocha --require babel-core/register --no-timeouts ios-app-test.js"
+    "automation-test": "mocha --require babel-core/register --no-timeouts automation-test.js"
   },
   "author": "Kobiton Inc",
   "license": "ISC",

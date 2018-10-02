@@ -2,14 +2,21 @@ import 'babel-polyfill'
 import 'colors'
 import wd from 'wd'
 import {assert} from 'chai'
-
-const username = process.env.KOBITON_USERNAME
+ const username = process.env.KOBITON_USERNAME
 const apiKey = process.env.KOBITON_API_KEY
-
-const platformVersion = process.env.KOBITON_DEVICE_PLATFORM_VERSION
-const platformName = process.env.KOBITON_DEVICE_PLATFORM_NAME || 'Android'
+ const platformVersion = process.env.KOBITON_DEVICE_PLATFORM_VERSION
+const platformName = process.env.KOBITON_DEVICE_PLATFORM_NAME
 const deviceName = process.env.KOBITON_DEVICE_NAME
+const appUrl = process.env.KOBITON_SESSION_APPLICATION_URL
+const deviceGroup = process.env.KOBITON_SESSION_DEVICE_GROUP || 'KOBITON'
+const deviceUdid = process.env.KOBITON_PRIVATE_DEVICE_UDID
+const groupId = process.env.KOBITON_ORGANIZATION_GROUP_ID
 
+ const kobitonServerConfig = {
+  protocol: 'https',
+  host: 'api.kobiton.com',
+  auth: `${username}:${apiKey}`
+}
 if (deviceName == null) {
   if (platformName == 'Android') {
     deviceName = 'Galaxy*'
@@ -17,38 +24,35 @@ if (deviceName == null) {
     deviceName = 'iPhone*'
   }
 }
-
-const kobitonServerConfig = {
-  protocol: 'https',
-  host: 'api.kobiton.com',
-  auth: `${username}:${apiKey}`
-}
-
-const desiredCaps = {
-  sessionName:        'Automation test session',
-  sessionDescription: 'Demo Automation Test on Android', 
+ const desiredCaps = {
+  sessionName:        'Automation Test Session',
+  sessionDescription: 'Kobiton Automation Test Demo', 
   deviceOrientation:  'portrait',  
   captureScreenshots: true, 
-  app:                '<APP_URL>', 
-  deviceGroup:        'KOBITON', 
+  app:                appUrl, 
+  deviceGroup:        deviceGroup, 
   deviceName:         deviceName,
+  platformVersion:    platformVersion,
   platformName:       platformName
 }
-desiredCaps.app = process.env.APP_URL
-
-let driver
-
-if (!username || !apiKey) {
-  console.log('Error: Environment variables KOBITON_USERNAME and KOBITON_API_KEY are required to execute script')
+ if (deviceUdid) {
+  desiredCaps.udid = deviceUdid
+}
+ if (groupId) {
+  desiredCaps.groupId = groupId
+}
+ if (platformVersion) {
+  desiredCaps.platformVersion = platformVersion
+}
+ if (!username || !apiKey || !desiredCaps.app) {
+  console.log('Error: Environment variables KOBITON_USERNAME, KOBITON_API_KEY and Application URL are required to execute this script')
   process.exit(1)
 }
-
-describe('Android App sample', () => {
-
-  before(async () => {
+ let driver
+ describe('Sample Application Test', () => {
+   before(async () => {
     driver = wd.promiseChainRemote(kobitonServerConfig)
-
-    driver.on('status', (info) => {
+     driver.on('status', (info) => {
       console.log(info.cyan)
     })
     driver.on('command', (meth, path, data) => {
@@ -57,8 +61,7 @@ describe('Android App sample', () => {
     driver.on('http', (meth, path, data) => {
       console.log(' > ' + meth.magenta, path, (data || '').grey)
     })
-
-    try {
+     try {
       await driver.init(desiredCaps)
     }
     catch (err) {
@@ -68,15 +71,7 @@ describe('Android App sample', () => {
     throw err
     }
   })
-
-  it('should show the app label', async () => {
-    await driver.elementByClassName("android.widget.TextView")
-      .text().then(function(text) {
-        assert.equal(text, 'API Demos')
-      })
-  })
-
-  after(async () => {
+   after(async () => {
     if (driver != null) {
     try {
       await driver.quit()
@@ -86,4 +81,4 @@ describe('Android App sample', () => {
     }
   }
   })
-})
+}) 
